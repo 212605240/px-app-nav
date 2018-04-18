@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   Polymer({
@@ -291,9 +291,11 @@
      * measure if they can fit in the nav.
      */
     _statics: {
-      ITEM_PADDING: '1rem', /*on both sides*/
+      ITEM_PADDING: '1rem',
+      /*on both sides*/
       ITEM_ICON_WIDTH: '2rem',
-      ITEM_ICON_PADDING: '0.33rem', /*only on one side*/
+      ITEM_ICON_PADDING: '0.33rem',
+      /*only on one side*/
       OPEN_ICON_WIDTH: '1.33rem',
       OPEN_ICON_PADDING: '0.2rem' /*only on one side*/
     },
@@ -303,12 +305,12 @@
     ],
 
     listeners: {
-      'iron-resize' : '_handleResize',
-      'px-app-nav-item-tapped' : '_itemSelectedByEvent',
-      'mouseenter' : '_handleMouseEnter',
-      'mouseleave' : '_handleMouseLeave',
-      'px-app-asset-graph-created' : 'rebuild',
-      'px-app-nav-rebuilt' : '_handleRebuild'
+      'iron-resize': '_handleResize',
+      'px-app-nav-item-tapped': '_itemSelectedByEvent',
+      'mouseenter': '_handleMouseEnter',
+      'mouseleave': '_handleMouseLeave',
+      'px-app-asset-graph-created': 'rebuild',
+      'px-app-nav-rebuilt': '_handleRebuild'
     },
 
     _handleRebuild() {
@@ -339,11 +341,15 @@
       if (!this.vertical) return;
 
       this._mouseIsOverNav = false;
-      this.debounce('close-nav-on-mouseleave', function() {
+      this.debounce('close-nav-on-mouseleave', function () {
         if (!this._mouseIsOverNav && this.verticalOpened) {
           this._setVerticalOpened(false);
         }
       }, 250);
+    },
+
+    navigateToRoute: function (event) {
+      this.fire('px-app-nav-item-clicked', event);
     },
 
     /**
@@ -351,7 +357,7 @@
      * items when `visibleItems` or `overflowedItems` changes.
      */
     _handleItemVisibilityChanged() {
-      this.debounce('item-visibility-changed', function(){
+      this.debounce('item-visibility-changed', function () {
         const visibleEl = Polymer.dom(this.root).querySelector('#visible');
         const overflowedEl = Polymer.dom(this.root).querySelector('#overflowed');
         if (visibleEl) visibleEl.render();
@@ -452,7 +458,10 @@
       }
 
       const measurements = this._measureItems(this.items);
-      const {visible, overflowed} = this._fitItems(this.items, measurements, this._availableWidth);
+      const {
+        visible,
+        overflowed
+      } = this._fitItems(this.items, measurements, this._availableWidth);
 
       // If only one item can fit, and there is more than one nav item defined,
       // switch to collapsed mode
@@ -489,14 +498,17 @@
 
       // If the first item is larger than the available, collapse all
       if (available < measurements[0]) {
-        return { visible: [], overflowed: items.slice(0) };
+        return {
+          visible: [],
+          overflowed: items.slice(0)
+        };
       }
 
       // Try to fit items in the available space
       let i = 0;
       let len = items.length;
 
-      while (i<len && available>0) {
+      while (i < len && available > 0) {
         if (measurements[i] > available) {
           break;
         }
@@ -505,16 +517,22 @@
       }
 
       // If any overflow, ensure the overflow icon can fit
-      const {itemPadding, iconSize} = this._getItemStyles();
-      let overflowSize = (itemPadding*2) + iconSize;
+      const {
+        itemPadding,
+        iconSize
+      } = this._getItemStyles();
+      let overflowSize = (itemPadding * 2) + iconSize;
       if (i !== len && available < overflowSize) {
         available -= overflowSize;
-        while (i>0 && available<0) {
+        while (i > 0 && available < 0) {
           available += measurements[i];
           i--;
         }
       }
-      return { visible: items.slice(0,i), overflowed: items.slice(i) };
+      return {
+        visible: items.slice(0, i),
+        overflowed: items.slice(i)
+      };
     },
 
     /**
@@ -540,11 +558,19 @@
      * @return {Number}
      */
     _measureItem(item) {
-      const {fontFamily, fontSize, itemPadding, iconSize, iconPadding, openIconSize, openIconPadding} = this._getItemStyles();
+      const {
+        fontFamily,
+        fontSize,
+        itemPadding,
+        iconSize,
+        iconPadding,
+        openIconSize,
+        openIconPadding
+      } = this._getItemStyles();
       const textLength = this._measureText(item[this.keys.label], fontFamily, fontSize);
       if (!textLength) return;
       let totalLength = textLength; /* start with text size */
-      totalLength += (itemPadding*2); /* add left pad + right pad */
+      totalLength += (itemPadding * 2); /* add left pad + right pad */
       if (item[this.keys.icon] && item[this.keys.icon].length) totalLength += (iconSize + iconPadding); /* add icon size + icon right pad */
       if (item[this.keys.children] && item[this.keys.children].length) totalLength += (openIconSize + openIconPadding); /* add dropdown icon size + dropdown icon left pad */
       return totalLength;
@@ -565,7 +591,10 @@
      */
     _getItemStyles() {
       if (!this._fontStyleCache) {
-        const {fontSize, fontFamily} = window.getComputedStyle(this);
+        const {
+          fontSize,
+          fontFamily
+        } = window.getComputedStyle(this);
         const rem = (val) => this._remToPx(parseFloat(val));
         const parse = (cssVar, fallbackRem) => this._parseSizeStyleVar(cssVar, rem(fallbackRem), parseInt(fontSize));
         const itemPadding = parse('--px-app-nav-item-padding', this._statics.ITEM_PADDING);
@@ -573,7 +602,15 @@
         const iconPadding = rem(this._statics.ITEM_ICON_PADDING);
         const openIconSize = rem(this._statics.OPEN_ICON_WIDTH);
         const openIconPadding = rem(this._statics.OPEN_ICON_PADDING);
-        this._fontStyleCache = {fontSize, fontFamily, itemPadding, iconSize, iconPadding, openIconSize, openIconPadding};
+        this._fontStyleCache = {
+          fontSize,
+          fontFamily,
+          itemPadding,
+          iconSize,
+          iconPadding,
+          openIconSize,
+          openIconPadding
+        };
       }
       return this._fontStyleCache;
     },

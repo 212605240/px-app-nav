@@ -499,7 +499,7 @@ Custom property | Description
                   collapsed only-show-icon="[[!verticalOpened]]" empty-icon="[[_isIconEmpty(item, keys.icon)]]">
                   <template is="dom-repeat" items="[[_getItemProp(item, keys.children)]]" as="subitem">
                     <px-app-nav-subitem item="[[subitem]]" label="[[_getItemProp(subitem, keys.label)]]" selected$="[[_isItemSelected(subitem, selectedMeta.item)]]"
-                      parent-selected$="[[_isItemSelected(item, selectedMeta.parent)]]" collapsed></px-app-nav-item>
+                      parent-selected$="[[_isItemSelected(item, selectedMeta.parent)]]" on-tap="navigateToRoute" collapsed></px-app-nav-item>
                   </template>
                 </px-app-nav-subgroup>
               </template>
@@ -508,7 +508,7 @@ Custom property | Description
               <!-- Stamp plain old items, which hold children -->
               <template is="dom-if" if="[[_isItemNotParent(item, keys.children)]]">
                 <px-app-nav-item item="[[item]]" label="[[_getItemProp(item, keys.label)]]" icon="[[_getItemProp(item, keys.icon)]]" selected$="[[_isItemSelected(item, selectedMeta.item)]]"
-                  collapsed only-show-icon$="[[!verticalOpened]]" empty-icon="[[_isIconEmpty(item, keys.icon)]]">
+                  collapsed only-show-icon$="[[!verticalOpened]]" empty-icon="[[_isIconEmpty(item, keys.icon)]]" on-tap="navigateToRoute">
                 </px-app-nav-item>
               </template>
             </template>
