@@ -409,6 +409,9 @@
      * Updates the selected item when the user taps on a nav item button.
      */
     _itemSelectedByEvent(evt) {
+
+      this._setVerticalOpened(true);
+
       if (evt.detail.item) {
         this.select(evt.detail.item, 'DOM_EVENT');
       }
