@@ -283,6 +283,20 @@
       _availableWidth: {
         type: Number,
         observer: 'rebuild'
+      },
+
+      /**
+       * Set to `true` to delay opening the vertical nav until the mouse has hovered for 600ms.
+       */
+      delaySlideAnimation: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+
+      _delayAnimationAsyncHandler: {
+        type: Number,
+        value: undefined
       }
     },
 
@@ -329,16 +343,25 @@
       if (!this.vertical) return;
 
       this._mouseIsOverNav = true;
-      if (this.isDebouncerActive('close-nav-on-mouseleave')) {
-        this.cancelDebouncer('close-nav-on-mouseleave');
-      }
-      if (this._mouseIsOverNav && !this.verticalOpened) {
-        this._setVerticalOpened(true);
-      }
+      var delay = (this.delaySlideAnimation) ? 600 : 0;
+      this._delayAnimationAsyncHandler = this.async(() => {
+        if (this.isDebouncerActive('close-nav-on-mouseleave')) {
+          this.cancelDebouncer('close-nav-on-mouseleave');
+        }
+
+        if (this._mouseIsOverNav && !this.verticalOpened) {
+          this._setVerticalOpened(true);
+        }
+      }, delay);
     },
 
     _handleMouseLeave() {
       if (!this.vertical) return;
+
+      if (this._delayAnimationAsyncHandler) {
+        this.cancelAsync(this._delayAnimationAsyncHandler);
+        this._delayAnimationAsyncHandler = undefined;
+      }
 
       this._mouseIsOverNav = false;
       this.debounce('close-nav-on-mouseleave', function () {
