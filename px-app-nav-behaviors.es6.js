@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   /* Ensures the behavior namespace is created */
@@ -76,10 +76,12 @@
      * Fire the select event so this item's parent will mark it as selected.
      */
     _handleSelfTapped(evt) {
-      if (this.cancelSelect || !this.item) return;
+      // if (this.cancelSelect || !this.item) return;
       this.fire('px-app-nav-item-tapped', {
         item: this.item
-      }, {cancelable:true});
+      }, {
+        cancelable: true
+      });
     }
   };
 })();
