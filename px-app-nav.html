@@ -502,6 +502,11 @@ Custom property | Description
                       <px-app-nav-subitem item="[[subitem]]" label="[[_getItemProp(subitem, keys.label)]]" selected$="[[_isItemSelected(subitem, selectedMeta.item)]]"
                         parent-selected$="[[_isItemSelected(item, selectedMeta.parent)]]" on-tap="navigateToRoute" collapsed></px-app-nav-item>
                     </template>
+                    <template is="dom-if" if="[[item.hidden]]">
+                      <px-app-nav-subitem item="[[subitem]]" label="[[_getItemProp(subitem, keys.label)]]" selected$="[[_isItemSelected(subitem, selectedMeta.item)]]"
+                        parent-selected$="[[_isItemSelected(item, selectedMeta.parent)]]" on-tap="navigateToRoute" collapsed
+                        hidden></px-app-nav-item>
+                    </template>
                   </template>
                 </px-app-nav-subgroup>
               </template>
